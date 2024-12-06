@@ -6,6 +6,6 @@ namespace ApotekaBackend.Interfaces
     {
 
 
-        string CreateToken(AppUser user);
+        Task<string> CreateToken(AppUser user);
     }
 }

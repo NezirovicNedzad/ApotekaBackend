@@ -1,15 +1,13 @@
-﻿namespace ApotekaBackend.Models
-{
-    public class AppUser
-    {
-        public int Id { get; set; }
+﻿using Microsoft.AspNetCore.Identity;
 
-        public string? Name { get; set; }
-        public string Surname { get; set; } 
-        public string Email { get; set; } 
-        public string Phone { get; set; }   
-        public required byte[] PasswordHash { get; set; }
-        public required byte[] PasswordSalt { get; set; }   
-    
+namespace ApotekaBackend.Models
+{
+    public class AppUser :IdentityUser<int>
+    {
+     
+        public string Phone { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public ICollection<AppUserRole> UserRoles { get; set; } = [];
     }
 }

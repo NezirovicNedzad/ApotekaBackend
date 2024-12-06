@@ -4,6 +4,7 @@ using ApotekaBackend.Interfaces;
 using ApotekaBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -12,14 +13,14 @@ using System.Text;
 namespace ApotekaBackend.Controllers
 {
   
-    public class AccountController(DataContext context,ITokenService tokenService) : BaseApiController
+    public class AccountController(UserManager<AppUser> userManager,ITokenService tokenService) : BaseApiController
     {
         [HttpGet]
 
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
 
-            var users = await context.Users.ToListAsync();
+            var users = await userManager.Users.ToListAsync();
             return users;
 
         }
@@ -30,7 +31,7 @@ namespace ApotekaBackend.Controllers
         public async Task<ActionResult<AppUser>> GetUser(int id)
         {
 
-            var user = await context.Users.FindAsync(id);
+            var user = await userManager.Users.FirstAsync(x => x.Id == id); 
 
 
             if (user == null) return NotFound();
@@ -44,26 +45,26 @@ namespace ApotekaBackend.Controllers
         {
             if (await UserExists(registerDto.Email)) return BadRequest("Email is taken!Try with another email");
 
-            using var hmac = new HMACSHA512();
+            
 
             var user = new AppUser
             {
                Name =registerDto.Name, 
                Surname = registerDto.Surname, 
                Phone = registerDto.Phone,
+               UserName="NN12",
                Email = registerDto.Email.ToLower(),
-               PasswordHash=hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-               PasswordSalt=hmac.Key
+              
             };
 
-            context.Users.Add(user);    
-          await  context.SaveChangesAsync();
+            var result = await userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded) return BadRequest(result.Errors);
             return new LoginReturnDto { 
                 Email=user.Email,
                 Name=user.Name,
                 Surname=user.Surname, 
                 Phone=user.Phone,
-                Token=tokenService.CreateToken(user)
+                Token=await tokenService.CreateToken(user)
                 };
 
         }
@@ -74,28 +75,23 @@ namespace ApotekaBackend.Controllers
         {
 
 
-            var user=await context.Users.FirstOrDefaultAsync(x=>x.Email==loginDto.email.ToLower());
+            var user=await userManager.Users.
+                FirstOrDefaultAsync(x=>x.Email==loginDto.email.ToUpper());
 
-            if (user == null) return Unauthorized("Invalid email"); 
-            
-            using var hmac=new HMACSHA512(user.PasswordSalt);
-
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.password));
-
-            for(int i=0; i<computedHash.Length; i++)
-            {
-
-                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password!");   
-            }
+            if (user == null || user.Email==null) return Unauthorized("Invalid email");
 
 
+
+            var result = await userManager.CheckPasswordAsync(user, loginDto.password);
+
+            if (!result) return Unauthorized();
               return new LoginReturnDto
             {
                 Email = user.Email,
                 Name = user.Name,
                 Surname = user.Surname,
                 Phone = user.Phone,
-                Token = tokenService.CreateToken(user)
+                Token = await tokenService.CreateToken(user)
             };
 
         }
@@ -103,7 +99,7 @@ namespace ApotekaBackend.Controllers
         private async Task<bool>UserExists(string email)
         {
 
-            return await context.Users.AnyAsync(x => x.Email.ToLower() == email.ToLower()); 
+            return await userManager.Users.AnyAsync(x => x.NormalizedEmail == email.ToUpper()); 
         }
         /*
       
