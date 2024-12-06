@@ -1,0 +1,6 @@
+@ApotekaBackend_HostAddress = http://localhost:5188
+
+GET {{ApotekaBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
