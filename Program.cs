@@ -1,6 +1,7 @@
 using ApotekaBackend.Data;
 using ApotekaBackend.Extensions;
 using ApotekaBackend.Interfaces;
+using ApotekaBackend.MIddleware;
 using ApotekaBackend.Models;
 using ApotekaBackend.Services;
 using FitnessBackend;
@@ -29,7 +30,7 @@ app.UseHttpsRedirection();
 
 
 
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200","https://localhost:4200"));
 app.UseAuthentication();
 app.UseAuthorization();

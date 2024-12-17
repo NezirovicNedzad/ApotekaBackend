@@ -52,7 +52,7 @@ namespace ApotekaBackend.Controllers
                Name =registerDto.Name, 
                Surname = registerDto.Surname, 
                Phone = registerDto.Phone,
-               UserName="NN12",
+               UserName=registerDto.Username,
                Email = registerDto.Email.ToLower(),
               
             };
@@ -101,33 +101,9 @@ namespace ApotekaBackend.Controllers
 
             return await userManager.Users.AnyAsync(x => x.NormalizedEmail == email.ToUpper()); 
         }
-        /*
+        
       
        
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<AppUser>> UpdateUser(UserRegisterDto registerDto,int id)
-        {
-
-            var user= await context.Users.FindAsync(id);  
-            
-            if (user == null) return NotFound();
-
-
-            user.Name = registerDto.Name;
-            user.Surname = registerDto.Surname;
-            user.Email = registerDto.Email;
-            user.Password = registerDto.Password;
-            user.Phone = registerDto.Phone;
-
-            
-
-         
-            await context.SaveChangesAsync();
-
-         
-            return user;
-
-        }
-        */
+        
     }
 }
