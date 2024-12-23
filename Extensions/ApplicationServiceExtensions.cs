@@ -1,5 +1,6 @@
 ﻿using ApotekaBackend.Data;
 using ApotekaBackend.Interfaces;
+using ApotekaBackend.Repositories;
 using ApotekaBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,9 @@ namespace ApotekaBackend.Extensions
             services.AddSwaggerGen();
             services.AddCors();
            services.AddScoped<ITokenService, TokenService>();
-           
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthService, AuthService>();    
 
             return services;
 
