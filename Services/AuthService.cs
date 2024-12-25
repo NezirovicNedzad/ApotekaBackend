@@ -46,6 +46,7 @@ namespace ApotekaBackend.Services
 
             var user = new AppUser
             {
+               
                 Name = registerDto.Name,
                 Surname = registerDto.Surname,
                 Phone = registerDto.Phone,

@@ -16,7 +16,7 @@ namespace FitnessBackend
 
                 new() {Name="Admin"},
                 new() {Name="Farmaceut"},
-                new(){Name="Lekar"}
+                new(){Name="Apotekar"}
             };
 
 
@@ -31,7 +31,7 @@ namespace FitnessBackend
             }
 
 
-            var adminEmail = "admin@example.com"; // Replace with your desired admin email
+            var adminEmail = "john@example.com"; // Replace with your desired admin email
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             
 
@@ -39,20 +39,20 @@ namespace FitnessBackend
             {
                 var newAdminUser = new AppUser
                 {
-                    UserName = "Admin",
+                    UserName = "JohnyBoy",
                     Email = adminEmail,
                     Phone="06412313",
-                    Name="Nedzad",
-                    Surname="Nezirovic",
+                    Name="John",
+                    Surname="Kennedy",
                     EmailConfirmed = true // Set tco true if email confirmation isn't required for admin
                 };
                 
-                var result = await userManager.CreateAsync(newAdminUser, "Admin@123"); // Set a strong password
+                var result = await userManager.CreateAsync(newAdminUser, "John@123"); // Set a strong password
                 Console.WriteLine(result);
                 if (result.Succeeded)
                 {
                     // Assign the user to the "Admin" role
-                    await userManager.AddToRoleAsync(newAdminUser, "Admin");
+                    await userManager.AddToRoleAsync(newAdminUser, "Farmaceut");
                 }
                
              

@@ -9,5 +9,11 @@ namespace ApotekaBackend.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public ICollection<AppUserRole> UserRoles { get; set; } = [];
+
+        public ICollection<Lek> Lekovi { get; set; } = [];
+
+        public ICollection<Klijent> Klijenti { get; set; } = [];
+
+        public ICollection<Recept>Recepti { get; set; } = [];
     }
 }

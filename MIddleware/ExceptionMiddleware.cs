@@ -24,7 +24,7 @@ namespace ApotekaBackend.MIddleware
 				var response = env.IsDevelopment() ? new ApiExceptions(context.Response.StatusCode, ex.Message, ex.StackTrace)
 					: new ApiExceptions(context.Response.StatusCode, ex.Message, "Internal server error");
 
-				var options = new JsonSerializerOptions
+                var options = new JsonSerializerOptions
 				{
 					PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 				};
