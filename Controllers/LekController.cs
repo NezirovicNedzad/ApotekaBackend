@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApotekaBackend.Controllers
 {
-    public class LekController(IUnitOfWork unitOfWork,UserManager<AppUser> userManager) : BaseApiController
+    public class LekController(IUnitOfWork unitOfWork,UserManager<AppUser> userManager,IPhotoService photoService) : BaseApiController
     {
        
         [HttpGet("")]
@@ -39,7 +39,7 @@ namespace ApotekaBackend.Controllers
                 Cena = lek.Cena,
                 Kolicina = lek.Kolicina,
                 NaRecept = lek.NaRecept,
-                PhotoUrl = lek.PhotoUrl,
+              
                 Proizvodjac = lek.Proizvodjac,
 
             };
@@ -49,11 +49,20 @@ namespace ApotekaBackend.Controllers
         }
 
         [HttpPost("")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> Add(LekDto lekDto)
         {
             var Farmaceut = await userManager.FindByIdAsync(lekDto.IdFarmaceuta.ToString());
 
             if (Farmaceut == null) return BadRequest("Nije pronadjen farmaceut dati");
+            string photoUrl = null;
+            if (lekDto.Photo != null && lekDto.Photo.Length > 0)
+            {
+                var photoResult = await photoService.AddPhotoAsync(lekDto.Photo);
+                if (photoResult.Error != null) return BadRequest(photoResult.Error.Message);
+
+                photoUrl = photoResult.SecureUrl.ToString();
+            }
             Lek lek = new()
             {
                 Farmaceut = Farmaceut,
@@ -61,7 +70,7 @@ namespace ApotekaBackend.Controllers
                 Cena = lekDto.Cena,
                 Kolicina = lekDto.Kolicina,
                 DatumIsteka = lekDto.DatumIsteka,
-                PhotoUrl = lekDto.PhotoUrl,
+                PhotoUrl = photoUrl,
                 Proizvodjac = lekDto.Proizvodjac,
                 Opis = lekDto.Opis,
                 NaRecept = lekDto.NaRecept,
@@ -69,7 +78,8 @@ namespace ApotekaBackend.Controllers
             };
             await unitOfWork.LekRepository.AddLek(lek);
             await unitOfWork.Complete();
-            return Ok(new { Message = "Uspesno dodat lek!", Naziv = lek.Naziv });
+
+            return Ok(new { Message = "Uspesno dodat lek!", Naziv = lek.Naziv ,PhotoUrl=photoUrl});
         }
 
         [HttpPut("{id:int}")]

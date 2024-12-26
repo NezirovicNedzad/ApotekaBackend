@@ -1,4 +1,5 @@
 ﻿using ApotekaBackend.Data;
+using ApotekaBackend.Helpers;
 using ApotekaBackend.Interfaces;
 using ApotekaBackend.Repositories;
 using ApotekaBackend.Services;
@@ -32,7 +33,9 @@ namespace ApotekaBackend.Extensions
             services.AddScoped<IKlijentRepository, KlijentRepository>();
             services.AddScoped<IReceptRepository, ReceptRepository>();  
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IAuthService, AuthService>();    
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPhotoService, PhotoService>();    
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             return services;
 
         }

@@ -14,7 +14,7 @@ using System.Text;
 namespace ApotekaBackend.Controllers
 {
 
-    public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IAuthService _authService) : BaseApiController
+    public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IAuthService _authService,IPhotoService photoService) : BaseApiController
     {
         
 
@@ -70,9 +70,7 @@ namespace ApotekaBackend.Controllers
 
             return Ok(result);
         }
-
      
-
 
 
     }

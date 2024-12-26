@@ -43,6 +43,8 @@ namespace ApotekaBackend.Controllers
 
            var result= await unitOfWork.ReceptRepository.Add(recept);
 
+            await unitOfWork.Complete();
+
             return Ok(result);  
 
         }
