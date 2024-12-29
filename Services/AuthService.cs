@@ -28,6 +28,7 @@ namespace ApotekaBackend.Services
 
             return (new LoginReturnDto
             {
+                Id=user.Id,
                 Email = user.Email,
                 Name = user.Name,
                 Surname = user.Surname,
@@ -46,7 +47,7 @@ namespace ApotekaBackend.Services
 
             var user = new AppUser
             {
-               
+              
                 Name = registerDto.Name,
                 Surname = registerDto.Surname,
                 Phone = registerDto.Phone,
@@ -64,6 +65,7 @@ namespace ApotekaBackend.Services
 
             return (new LoginReturnDto
             {
+                Id=user.Id,
                 Email = user.Email,
                 Name = user.Name,
                 Surname = user.Surname,

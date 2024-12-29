@@ -12,5 +12,6 @@ namespace ApotekaBackend.Interfaces
 
         Task<Lek> AddLek(Lek lek);
         Task UpdateLek(Lek lek);
+        Task<List<Lek>> GetByNaziv(string naziv);    
     }
 }

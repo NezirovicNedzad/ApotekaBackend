@@ -18,7 +18,7 @@ namespace ApotekaBackend.Dto_s
 
 
         public IFormFile Photo { get; set; }
-
+        public string PhotoUrl {  get; set; }   
         public int IdFarmaceuta { get; set; }
        
     }

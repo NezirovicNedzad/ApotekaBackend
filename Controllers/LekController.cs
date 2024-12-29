@@ -39,7 +39,7 @@ namespace ApotekaBackend.Controllers
                 Cena = lek.Cena,
                 Kolicina = lek.Kolicina,
                 NaRecept = lek.NaRecept,
-              
+              PhotoUrl = lek.PhotoUrl,  
                 Proizvodjac = lek.Proizvodjac,
 
             };
@@ -52,9 +52,9 @@ namespace ApotekaBackend.Controllers
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> Add(LekDto lekDto)
         {
-            var Farmaceut = await userManager.FindByIdAsync(lekDto.IdFarmaceuta.ToString());
+            //var Farmaceut = await userManager.FindByIdAsync(lekDto.IdFarmaceuta.ToString());
 
-            if (Farmaceut == null) return BadRequest("Nije pronadjen farmaceut dati");
+            //if (Farmaceut == null) return BadRequest("Nije pronadjen farmaceut dati");
             string photoUrl = null;
             if (lekDto.Photo != null && lekDto.Photo.Length > 0)
             {
@@ -65,7 +65,7 @@ namespace ApotekaBackend.Controllers
             }
             Lek lek = new()
             {
-                Farmaceut = Farmaceut,
+              
                 Naziv = lekDto.Naziv,
                 Cena = lekDto.Cena,
                 Kolicina = lekDto.Kolicina,
@@ -97,6 +97,16 @@ namespace ApotekaBackend.Controllers
             await unitOfWork.LekRepository.UpdateLek(lek);
             await unitOfWork.Complete();
             return Ok(new { Message = "Uspesno uredjen lek!", Naziv = lek.Naziv });
+        }
+
+        [HttpGet("search/{naziv}")]
+        public async Task<ActionResult<List<Lek>>>GetLekByName(string naziv)
+        {
+            var lekovi=await unitOfWork.LekRepository.GetByNaziv(naziv);
+            if (lekovi.Count==0) {
+                return NotFound("Ne postoji lek sa takvim nazivom");
+                 }
+            return Ok(lekovi);
         }
 
 

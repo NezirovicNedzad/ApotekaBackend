@@ -30,6 +30,12 @@ namespace ApotekaBackend.Repositories
             return lek; 
         }
 
+        public async Task<List<Lek>> GetByNaziv(string naziv)
+        {
+            var lekovi = await _context.Lekovi.Where(l=>l.Naziv.StartsWith(naziv)).ToListAsync();
+            return lekovi;  
+        }
+
         public async Task UpdateLek(Lek lek)
         {
             _context.Lekovi.Update(lek);
