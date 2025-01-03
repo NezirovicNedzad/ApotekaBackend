@@ -4,6 +4,7 @@ using ApotekaBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApotekaBackend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250102191907_AddedAllEntities")]
+    partial class AddedAllEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -296,7 +299,13 @@ namespace ApotekaBackend.Migrations
                     b.Property<int>("IdLeka")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdTransakcije")
+                    b.Property<int>("IdProdaje")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdProdajeRecept")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdProdajeStandardni")
                         .HasColumnType("int");
 
                     b.Property<int>("Kolicina")
@@ -309,7 +318,7 @@ namespace ApotekaBackend.Migrations
 
                     b.HasIndex("IdLeka");
 
-                    b.HasIndex("IdTransakcije");
+                    b.HasIndex("IdProdajeStandardni");
 
                     b.HasIndex("ReceptId");
 
@@ -506,9 +515,8 @@ namespace ApotekaBackend.Migrations
 
                     b.HasOne("ApotekaBackend.Models.Transkacija", "Transkacija")
                         .WithMany("ProdajaDetalji")
-                        .HasForeignKey("IdTransakcije")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdProdajeStandardni")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ApotekaBackend.Models.Recept", "Recept")
                         .WithMany("ProdajaDetalji")

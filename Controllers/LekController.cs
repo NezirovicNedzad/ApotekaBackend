@@ -99,14 +99,26 @@ namespace ApotekaBackend.Controllers
             return Ok(new { Message = "Uspesno uredjen lek!", Naziv = lek.Naziv });
         }
 
-        [HttpGet("search/{naziv}")]
-        public async Task<ActionResult<List<Lek>>>GetLekByName(string naziv)
+        [HttpGet("search")]
+        public async Task<ActionResult<List<Lek>>>GetLekByName([FromQuery] string? naziv)
         {
-            var lekovi=await unitOfWork.LekRepository.GetByNaziv(naziv);
-            if (lekovi.Count==0) {
-                return NotFound("Ne postoji lek sa takvim nazivom");
-                 }
+            List<Lek> lekovi;
+
+            if (string.IsNullOrWhiteSpace(naziv))
+            {
+                // If no search term, return all records
+                lekovi = await unitOfWork.LekRepository.GetAll();
+            }
+            else
+            {
+                // Search by naziv if provided
+                lekovi = await unitOfWork.LekRepository.GetByNaziv(naziv);
+            }
+
+            
+
             return Ok(lekovi);
+
         }
 
 

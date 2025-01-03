@@ -18,7 +18,10 @@
         public int IdApotekara { get; set; }
 
         public ICollection<Recept> Recepti { get; set; } = null!;
-        public AppUser Apotekar {  get; set; }  
-        
+        public AppUser Apotekar {  get; set; }
+        public ICollection<Transkacija> Transakcije { get; set; } = new List<Transkacija>();
+     
+     
+
     }
 }

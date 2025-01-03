@@ -18,6 +18,8 @@ namespace ApotekaBackend.Data
         public DbSet<Recept> Recepti { get; set; }  
 
 
+        public DbSet<TransakcijaDetalji> TransakcijaDetalji { get; set; }
+        public DbSet<Transkacija> Transakcije{ get; set; } 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -58,6 +60,38 @@ namespace ApotekaBackend.Data
                .HasOne(r => r.Lek)
                .WithMany(l=>l.Recepti)
                .HasForeignKey(s => s.IdLeka).OnDelete(DeleteBehavior.Restrict);
+
+
+
+            builder.Entity<TransakcijaDetalji>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Lek)
+                      .WithMany(l => l.ProdajaDetalji)
+                      .HasForeignKey(e => e.IdLeka)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Transkacija)
+                      .WithMany(p => p.ProdajaDetalji)
+                      .HasForeignKey(e => e.IdTransakcije)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+               
+
+                entity.HasOne(e => e.Recept)
+                      .WithMany(r => r.ProdajaDetalji)
+                      .HasForeignKey(e => e.ReceptId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+            });
+
+            builder.Entity<Transkacija>().
+                HasOne(t => t.Klijent).
+                WithMany(t => t.Transakcije).
+                HasForeignKey(k => k.KlijentId);          
+
+
         }
 
 

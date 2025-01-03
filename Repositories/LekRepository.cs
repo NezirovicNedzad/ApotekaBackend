@@ -32,7 +32,7 @@ namespace ApotekaBackend.Repositories
 
         public async Task<List<Lek>> GetByNaziv(string naziv)
         {
-            var lekovi = await _context.Lekovi.Where(l=>l.Naziv.StartsWith(naziv)).ToListAsync();
+            var lekovi = await _context.Lekovi.Where(l=>l.Naziv.Contains(naziv)).ToListAsync();
             return lekovi;  
         }
 

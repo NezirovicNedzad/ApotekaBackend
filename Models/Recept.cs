@@ -24,7 +24,7 @@
         public AppUser Farmaceut { get; set; } = null!;
         public Lek Lek { get; set; } = null!;
 
-
+        public List<TransakcijaDetalji> ProdajaDetalji { get; set; } = new List<TransakcijaDetalji>();
 
     }
 }

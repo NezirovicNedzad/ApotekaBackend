@@ -22,5 +22,6 @@
         public int IdFarmaceuta { get; set; }
         public AppUser Farmaceut { get; set; } = null!;
         public ICollection<Recept> Recepti { get; set; } = null!;
+        public ICollection<TransakcijaDetalji> ProdajaDetalji { get; set; } = new List<TransakcijaDetalji>();
     }
 }
