@@ -22,6 +22,22 @@ namespace ApotekaBackend.Controllers
 
 
         }
+        [HttpGet("klijent/{idKlijenta}")]
+
+        public async Task<ActionResult<List<ReceptForKlijentDto>>>GetReceptsForKlijent(int idKlijenta)
+        {
+
+            var result=await unitOfWork.ReceptRepository.GetByKlijent(idKlijenta);
+
+            if (result.Count == 0)
+            {
+                return Ok();
+            }
+
+            return result;
+
+
+        }
 
         [HttpPost("")]
 

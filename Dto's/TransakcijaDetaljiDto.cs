@@ -3,7 +3,7 @@
     public class TransakcijaDetaljiDto
     {
         public int IdLeka { get; set; }
-        public int Kolicina { get; set; }
-        public int? ReceptId { get; set; }
+        public int KolicinaProizvoda { get; set; }
+        public int? IdRecepta { get; set; }
     }
 }

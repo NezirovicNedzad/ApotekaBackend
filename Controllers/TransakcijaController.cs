@@ -27,7 +27,7 @@ namespace ApotekaBackend.Controllers
                 return BadRequest("Dati klijent ne postoji!");
             }
 
-            foreach (var detail in transkacijaDto.Detalji)
+            foreach (var detail in transkacijaDto.prodajaDetalji)
             {
 
                 // Validate Lek
@@ -37,12 +37,12 @@ namespace ApotekaBackend.Controllers
                 {
                     return BadRequest("Lek ne postoji!");
                 }
-                cena += lek.Cena * detail.Kolicina;
+                cena += lek.Cena * detail.KolicinaProizvoda;
                 // Check if Lek requires a prescription
                 if (lek.NaRecept)
                 {
                     var recept = await _context.Recepti
-                      .FirstOrDefaultAsync(r => r.Id == detail.ReceptId && r.IdKlijenta == transkacijaDto.KlijentId && r.IdLeka == detail.IdLeka);
+                      .FirstOrDefaultAsync(r => r.Id == detail.IdRecepta && r.IdKlijenta == transkacijaDto.KlijentId && r.IdLeka == detail.IdLeka);
                     if (recept == null)
                     {
                         return BadRequest($"Nepostojeci recept za lek '{lek.Naziv}'.Proveri da li dati recept postoji za odgovarajuci lek i za odgovarajuceg klijenta?");
@@ -59,11 +59,11 @@ namespace ApotekaBackend.Controllers
                 KlijentId = transkacijaDto.KlijentId,
                 Cena = cena,
                 DatumTransakcije = DateTime.UtcNow,
-                ProdajaDetalji = transkacijaDto.Detalji.Select(d => new TransakcijaDetalji
+                ProdajaDetalji = transkacijaDto.prodajaDetalji.Select(d => new TransakcijaDetalji
                 {
                     IdLeka = d.IdLeka,
-                    Kolicina = d.Kolicina,
-                    ReceptId = d.ReceptId
+                    Kolicina = d.KolicinaProizvoda,
+                    ReceptId = d.IdRecepta
                 }).ToList()
             };
 
@@ -105,7 +105,7 @@ namespace ApotekaBackend.Controllers
                     Id = d.Id,
                     IdLeka = d.IdLeka,
                     ImeLeka = d.Lek.Naziv,
-                    Kolicina = d.Kolicina,
+                    KolicinaProizvoda = d.Kolicina,
                     IdRecepta = d.ReceptId,
                     ReceptUputstvo = d.Recept?.Uputstvo
                 }).ToList()
@@ -149,7 +149,7 @@ namespace ApotekaBackend.Controllers
                     Id = d.Id,
                     IdLeka = d.IdLeka,
                     ImeLeka = d.Lek.Naziv,
-                    Kolicina = d.Kolicina,
+                    KolicinaProizvoda = d.Kolicina,
                     IdRecepta = d.ReceptId,
                     ReceptUputstvo = d.Recept?.Uputstvo
                 }).ToList()

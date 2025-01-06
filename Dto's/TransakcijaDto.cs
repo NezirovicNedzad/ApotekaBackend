@@ -5,6 +5,6 @@
         public int KlijentId { get; set; }
      
 
-        public List<TransakcijaDetaljiDto> Detalji { get; set; } = new List<TransakcijaDetaljiDto>();
+        public List<TransakcijaDetaljiDto> prodajaDetalji { get; set; } = new List<TransakcijaDetaljiDto>();
     }
 }

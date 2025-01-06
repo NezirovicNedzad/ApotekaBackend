@@ -1,4 +1,5 @@
-﻿using ApotekaBackend.Models;
+﻿using ApotekaBackend.Dto_s;
+using ApotekaBackend.Models;
 
 namespace ApotekaBackend.Interfaces
 {
@@ -9,5 +10,7 @@ namespace ApotekaBackend.Interfaces
         Task<Recept> GetById(int id);   
 
         Task<Recept>Add(Recept recept); 
+
+        Task<List<ReceptForKlijentDto>>GetByKlijent(int klijentId);
     }
 }

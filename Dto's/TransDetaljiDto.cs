@@ -6,7 +6,7 @@
         public int IdLeka { get; set; }
         public int ?IdRecepta { get; set; }
 
-        public int Kolicina {  get; set; }  
+        public int KolicinaProizvoda {  get; set; }  
         public string? ReceptUputstvo { get; set; }
         public string  ImeLeka { get; set; }
 
