@@ -3,6 +3,7 @@ using ApotekaBackend.Helpers;
 using ApotekaBackend.Interfaces;
 using ApotekaBackend.Repositories;
 using ApotekaBackend.Services;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -34,8 +35,16 @@ namespace ApotekaBackend.Extensions
             services.AddScoped<IReceptRepository, ReceptRepository>();  
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IPhotoService, PhotoService>();    
+            services.AddScoped<IPhotoService, PhotoService>();   
+            services.AddScoped<IReceptDoctor,ReceptService>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.AddHangfire(config2 =>
+          config2.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseDefaultTypeSerializer()
+                .UseSqlServerStorage(config.GetConnectionString("DefaultConnection"))); // Or your specific storage provider
+
+            services.AddHangfireServer();
             return services;
 
         }

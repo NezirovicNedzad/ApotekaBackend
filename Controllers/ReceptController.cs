@@ -1,6 +1,7 @@
 ﻿using ApotekaBackend.Dto_s;
 using ApotekaBackend.Interfaces;
 using ApotekaBackend.Models;
+using ApotekaBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,6 +64,18 @@ namespace ApotekaBackend.Controllers
 
             return Ok(result);  
 
+        }
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckNewReceipt()
+        {
+            var newReceipt = await unitOfWork.ReceptRepository.GetNewReceipt();
+
+            if (newReceipt != null)
+            {
+                return Ok(newReceipt); // Return the latest receipt or a flag
+            }
+
+            return NoContent(); // No new receipts
         }
     }
 }

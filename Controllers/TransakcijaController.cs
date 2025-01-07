@@ -37,6 +37,10 @@ namespace ApotekaBackend.Controllers
                 {
                     return BadRequest("Lek ne postoji!");
                 }
+                if(lek.Kolicina==0)
+                {
+                    return BadRequest("Nema na stanju!");
+                }
                 cena += lek.Cena * detail.KolicinaProizvoda;
                 // Check if Lek requires a prescription
                 if (lek.NaRecept)

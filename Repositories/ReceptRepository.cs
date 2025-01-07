@@ -2,6 +2,7 @@
 using ApotekaBackend.Dto_s;
 using ApotekaBackend.Interfaces;
 using ApotekaBackend.Models;
+using ApotekaBackend.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApotekaBackend.Repositories
@@ -14,6 +15,7 @@ namespace ApotekaBackend.Repositories
             return(recept); 
         }
 
+     
         public async Task<List<Recept>> GetAll()
         {
             return await context.Recepti.ToListAsync();
@@ -44,6 +46,48 @@ namespace ApotekaBackend.Repositories
         
         }).ToListAsync();
             return recepti;
+        }
+
+        public async Task<Recept> AddRandomRecept(int idKlijenta,int idLeka)
+        {
+            var random = new Random();
+
+            var newRecept = new Recept
+            {
+                Ordinatio = "Random Ordinatio",
+                Subskricpija = "Random Subskricpija",
+                Uputstvo = "Random Uputstvo",
+                Invocatio = "Random Invocatio",
+                Zaglavlje = "Random Zaglavlje",
+                IdFarmaceuta =28, // Random pharmacist
+                IdLeka = idLeka, // Random medication
+                IdKlijenta =idKlijenta, // Random client
+                IsDoctorPresribed = true // Random boolean
+            };
+            await context.Recepti.AddAsync(newRecept);
+            return newRecept;
+
+        }
+
+        public  async Task<ReceptBackgroundDto> GetNewReceipt()
+        {
+            var newReceipt = await context.Recepti.OrderByDescending(l => l.Id).Select(s=>new ReceptBackgroundDto
+            {
+                Zaglavlje = s.Zaglavlje,
+                Invocatio=s.Invocatio,
+                Ordinatio=s.Ordinatio,
+                NazivLeka=s.Lek.Naziv,
+                ImeKlijenta=s.Klijent.Ime+' '+s.Klijent.Prezime,
+                Subskricpija=s.Subskricpija,
+                Uputstvo=s.Uputstvo
+
+
+            } ).FirstOrDefaultAsync();
+            
+
+            return newReceipt; // Return the latest receipt or a flag
+            
+
         }
     }
 }

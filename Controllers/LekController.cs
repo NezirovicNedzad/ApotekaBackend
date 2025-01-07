@@ -121,6 +121,43 @@ namespace ApotekaBackend.Controllers
 
         }
 
+        [HttpGet("random")]
+        public async Task<ActionResult<Lek>> GetRandomLek()
+        {
+
+            var lekovi = await unitOfWork.LekRepository.GetAll();
+            var lekoviId = lekovi.Where(l => l.NaRecept).Select(x => x.Id).ToList();
+            var randomBr = 0;
+            if (lekovi.Any()) // Ensure the list is not empty
+            {
+            
+
+                if (lekoviId.Count > 0) // Check if there are any valid IDs to select
+                {
+                    Random random = new Random();
+                    randomBr = random.Next(0, lekoviId.Count);  // Use lekoviId.Count to prevent out-of-bounds
+
+                    // Use lekoviId[randomBr] here
+                }
+                else
+                {
+                    // Handle the case where there are no valid items
+
+                    randomBr = 18;
+                }
+            }
+            else
+            {
+                // Handle the case where lekovi is empty
+                return BadRequest("Ne lekovi");
+            }
+
+
+
+            return Ok(lekoviId[randomBr]); 
+
+        }
+
 
 
     }

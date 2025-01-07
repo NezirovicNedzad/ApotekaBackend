@@ -5,6 +5,7 @@ using ApotekaBackend.MIddleware;
 using ApotekaBackend.Models;
 using ApotekaBackend.Services;
 using FitnessBackend;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,8 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200","https://localhost:4200"));
 app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
 
+app.UseAuthorization();
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -54,5 +54,13 @@ catch (Exception ex)
 
 }
 
+app.UseHangfireDashboard();
 
+// Schedule recurring job
+RecurringJob.AddOrUpdate<IReceptDoctor>(
+    "AddRandomReceptJob",
+    service => service.AddRecept(),
+     "*/2 * * * *" );
+
+app.MapControllers();
 app.Run();
