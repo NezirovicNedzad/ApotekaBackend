@@ -57,10 +57,10 @@ catch (Exception ex)
 app.UseHangfireDashboard();
 
 // Schedule recurring job
-RecurringJob.AddOrUpdate<IReceptDoctor>(
-    "AddRandomReceptJob",
-    service => service.AddRecept(),
-     "*/2 * * * *" );
+//RecurringJob.AddOrUpdate<IReceptDoctor>(
+//    "AddRandomReceptJob",
+//    service => service.AddRecept(),
+//     "*/2 * * * *" );
 
 app.MapControllers();
 app.Run();

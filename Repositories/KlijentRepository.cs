@@ -24,9 +24,16 @@ namespace ApotekaBackend.Repositories
             return await _context.Klijenti.FirstOrDefaultAsync(k => k.Id == id);     
         }
 
+        public async Task<List<Klijent>> GetByNaziv(string naziv)
+        {
+            return await _context.Klijenti.Where(k=>k.Ime.Contains(naziv) || k.Prezime.Contains(naziv)).ToListAsync();
+        }
+
         public async Task UpdateKlijent(Klijent klijent)
         {
            _context.Klijenti.Update(klijent);
         }
+
+        
     }
 }

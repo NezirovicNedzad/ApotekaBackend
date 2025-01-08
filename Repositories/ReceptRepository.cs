@@ -34,7 +34,7 @@ namespace ApotekaBackend.Repositories
                 Zaglavlje=x.Zaglavlje,
                 Ordinatio=x.Ordinatio,
                 Invocatio=x.Invocatio,  
-                Subskricpija=x.Subskricpija,    
+                Subskripcija=x.Subskricpija,    
                 IdFarmaceuta=x.IdFarmaceuta,    
                 IdLeka=x.IdLeka,
                     IdKlijenta=x.IdKlijenta,
@@ -78,7 +78,7 @@ namespace ApotekaBackend.Repositories
                 Ordinatio=s.Ordinatio,
                 NazivLeka=s.Lek.Naziv,
                 ImeKlijenta=s.Klijent.Ime+' '+s.Klijent.Prezime,
-                Subskricpija=s.Subskricpija,
+                Subskripcija=s.Subskricpija,
                 Uputstvo=s.Uputstvo
 
 

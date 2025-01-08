@@ -57,9 +57,16 @@ namespace ApotekaBackend.Services
             };
 
             var result = await userManager.CreateAsync(user, registerDto.Password);
+          
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return (null, errors);
+            }
+            var roleResult = await userManager.AddToRoleAsync(user, registerDto.Role);
+            if (!roleResult.Succeeded)
+            {
+                var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
                 return (null, errors);
             }
 
@@ -70,6 +77,7 @@ namespace ApotekaBackend.Services
                 Name = user.Name,
                 Surname = user.Surname,
                 Phone = user.Phone,
+                Role=registerDto.Role,  
                 Token = await tokenService.CreateToken(user)
             }, null);
 

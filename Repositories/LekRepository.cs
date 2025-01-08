@@ -22,6 +22,11 @@ namespace ApotekaBackend.Repositories
             return await _context.Lekovi.ToListAsync();   
         }
 
+        public async Task<List<Lek>> GetAllNaRecept()
+        {
+           return await _context.Lekovi.Where(l=>l.NaRecept).ToListAsync();
+        }
+
         public async Task<Lek> GetById(int id)
         
         {
@@ -34,6 +39,14 @@ namespace ApotekaBackend.Repositories
         {
             var lekovi = await _context.Lekovi.Where(l=>l.Naziv.Contains(naziv)).ToListAsync();
             return lekovi;  
+        }
+
+        public async Task ObnoviZalihe(int id, int kolicina)
+        {
+            var lek=await _context.Lekovi.FirstOrDefaultAsync(  l=>l.Id == id); 
+
+            lek.Kolicina+= kolicina; 
+            _context.Lekovi.Update(lek);
         }
 
         public async Task UpdateLek(Lek lek)

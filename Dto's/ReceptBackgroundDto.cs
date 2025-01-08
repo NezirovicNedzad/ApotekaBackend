@@ -9,7 +9,7 @@
 
         public string Ordinatio { get; set; }
 
-        public string Subskricpija { get; set; }
+        public string Subskripcija { get; set; }
 
         public string Uputstvo { get; set; }
         public string NazivLeka { get; set; }

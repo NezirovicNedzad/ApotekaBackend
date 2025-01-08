@@ -47,7 +47,7 @@ namespace ApotekaBackend.Controllers
 
             Recept recept=new()
             { Ordinatio = receptDto.Ordinatio,
-            Subskricpija=receptDto.Subskricpija ,
+            Subskricpija=receptDto.Subskripcija ,
             Uputstvo=receptDto.Uputstvo,
             Invocatio=receptDto.Invocatio,  
             Zaglavlje=receptDto.Zaglavlje,  

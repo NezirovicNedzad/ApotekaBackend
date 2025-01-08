@@ -1,4 +1,5 @@
-﻿using ApotekaBackend.Dto_s;
+﻿using ApotekaBackend.Data;
+using ApotekaBackend.Dto_s;
 using ApotekaBackend.Interfaces;
 using ApotekaBackend.Models;
 using Microsoft.AspNetCore.Http;
@@ -55,6 +56,29 @@ namespace ApotekaBackend.Controllers
 
             await _unitOfWork.Complete();
             return Ok(result);  
+
+        }
+
+
+        [HttpGet("search")]
+        public async Task<ActionResult<List<Klijent>>> GetLekByName([FromQuery] string? naziv)
+        {
+            List<Klijent> klijenti;
+
+            if (string.IsNullOrWhiteSpace(naziv))
+            {
+                // If no search term, return all records
+                klijenti = await _unitOfWork.KlijentRepository.GetAll();
+            }
+            else
+            {
+                // Search by naziv if provided
+                klijenti = await _unitOfWork.KlijentRepository.GetByNaziv(naziv);
+            }
+
+
+
+            return Ok(klijenti);
 
         }
 
