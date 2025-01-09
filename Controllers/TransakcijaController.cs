@@ -177,20 +177,29 @@ namespace ApotekaBackend.Controllers
         {
              DateTime lastMonth = DateTime.Now.AddMonths(-1);
 
-            var transakcijeKlijent=await _context.Transakcije.Where(x=>x.KlijentId==id).ToListAsync();    
+            var transakcijeKlijent=await _context.Transakcije.Where(x=>x.KlijentId==id).ToListAsync();
             // Find a transaction that matches the criteria
-            var transaction = transakcijeKlijent
-                .Where(t => t.DatumTransakcije >= lastMonth && t.Cena > 5000)
-                .FirstOrDefault();
+            var totalPrice = transakcijeKlijent
+        .Where(t => t.DatumTransakcije >=lastMonth)
+        .Sum(t => t.Cena );
 
-            if (transaction != null)
+            // Provera da li ukupna cena prelazi 10000
+            if (totalPrice > 10000)
             {
                 // Calculate 80% of the price
                 decimal cena = cenaTotal * 0.85M;
-                return Ok( new {reducedCena =cena, popust=true});
+                return Ok(new { reducedCena = cena, popust = true,cena=totalPrice });
             }
+            else
+            {
 
-            return Ok(new { message="Nemate pravo popusta" ,popust=false});
+                return Ok(new { message = "Nemate pravo popusta", popust = false ,cena=totalPrice});
+            }
+           
+            
+               
+            
+
 
 
 
