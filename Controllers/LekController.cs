@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ApotekaBackend.Controllers
 {
@@ -101,7 +102,11 @@ namespace ApotekaBackend.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<List<Lek>>>GetLekByName([FromQuery] string? naziv)
+        public async Task<ActionResult<List<Lek>>>GetLekByName(
+            [FromQuery] string? naziv,
+            [FromQuery] int pageNumber=1,
+            [FromQuery] int pageSize=10
+            )
         {
             List<Lek> lekovi;
 
@@ -115,10 +120,26 @@ namespace ApotekaBackend.Controllers
                 // Search by naziv if provided
                 lekovi = await unitOfWork.LekRepository.GetByNaziv(naziv);
             }
+            int totalRecords = lekovi.Count();
 
-            
+             lekovi = lekovi
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-            return Ok(lekovi);
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                lekovi = lekovi
+            };
+
+            return Ok(result);
+
+
+
+           
 
         }
 

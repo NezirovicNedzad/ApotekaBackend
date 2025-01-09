@@ -41,6 +41,8 @@ namespace ApotekaBackend.Controllers
                 {
                     return BadRequest("Nema na stanju!");
                 }
+                lek.Kolicina = lek.Kolicina - 1;
+                 _context.Lekovi.Update(lek);
                 cena += lek.Cena * detail.KolicinaProizvoda;
                 // Check if Lek requires a prescription
                 if (lek.NaRecept)
@@ -123,7 +125,7 @@ namespace ApotekaBackend.Controllers
 
 
         }
-        [HttpGet("${id}")]
+        [HttpGet("{id}")]
 
         public async Task<ActionResult<TransDto>> GetTrans(int id)
         {
@@ -164,6 +166,31 @@ namespace ApotekaBackend.Controllers
 
 
 
+
+
+
+        }
+
+        [HttpGet("popust/{id}")]
+
+        public async Task<ActionResult>GetCena(int id,[FromQuery]int cenaTotal)
+        {
+             DateTime lastMonth = DateTime.Now.AddMonths(-1);
+
+            var transakcijeKlijent=await _context.Transakcije.Where(x=>x.KlijentId==id).ToListAsync();    
+            // Find a transaction that matches the criteria
+            var transaction = transakcijeKlijent
+                .Where(t => t.DatumTransakcije >= lastMonth && t.Cena > 5000)
+                .FirstOrDefault();
+
+            if (transaction != null)
+            {
+                // Calculate 80% of the price
+                decimal cena = cenaTotal * 0.85M;
+                return Ok( new {reducedCena =cena, popust=true});
+            }
+
+            return Ok(new { message="Nemate pravo popusta" ,popust=false});
 
 
 

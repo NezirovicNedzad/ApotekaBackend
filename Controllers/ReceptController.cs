@@ -39,6 +39,39 @@ namespace ApotekaBackend.Controllers
 
 
         }
+        [HttpGet("klijentPagin/{idKlijenta}")]
+
+        public async Task<ActionResult> GetReceptsForKlijentPagin(int idKlijenta,
+             [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+
+            var recepti = await unitOfWork.ReceptRepository.GetByKlijent(idKlijenta);
+
+            if (recepti.Count == 0)
+            {
+                return Ok();
+            }
+            int totalRecords = recepti.Count();
+
+            recepti = recepti
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize)
+           .ToList();
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                recepti = recepti
+            };
+
+            return Ok(result);
+ 
+
+
+        }
 
         [HttpPost("")]
 
