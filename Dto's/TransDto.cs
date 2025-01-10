@@ -8,6 +8,7 @@
         public string KlijentName { get; set; }
         public int Cena { get; set; }
         public string DatumTransakcije { get; set; }
+        
 
         public List<TransDetaljiDto>ProdajaDetalji {get;set;}=new List<TransDetaljiDto>();
     }

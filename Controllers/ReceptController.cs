@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApotekaBackend.Controllers
 {
    
-    public class ReceptController(IUnitOfWork unitOfWork) : BaseApiController
+    public class ReceptController(IUnitOfWork unitOfWork,IReceptDoctor receptService) : BaseApiController
     {
 
 
@@ -109,6 +109,15 @@ namespace ApotekaBackend.Controllers
             }
 
             return NoContent(); // No new receipts
+        }
+
+        [HttpPost("random-add")]
+        public async Task<IActionResult>RandomAdd(int idKlijenta,int idLeka)
+        {
+            var klijentId = await receptService.AddRecept();
+
+            return Ok(klijentId);   
+
         }
     }
 }

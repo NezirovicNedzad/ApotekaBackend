@@ -89,7 +89,7 @@ namespace ApotekaBackend.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<List<TransDto>>> GetTrans()
+        public async Task<ActionResult> GetTrans([FromQuery] int pageSize,[FromQuery]int pageNumber)
         {
 
             var transakcije = await _context.Transakcije
@@ -97,7 +97,12 @@ namespace ApotekaBackend.Controllers
                 .ThenInclude(d => d.Lek) // Include associated Lek
             .Include(t => t.ProdajaDetalji)
                 .ThenInclude(d => d.Recept) // Include associated Recept
-            .Include(t => t.Klijent).ToListAsync();
+            .Include(t => t.Klijent)
+            .Skip((pageNumber - 1) * pageSize)  // Skip items for pagination
+        .Take(pageSize)                    // Take the pageSize items
+        .ToListAsync();
+
+            
 
             var transactionDtos = transakcije.Select(transaction => new TransDto
             {
@@ -125,6 +130,69 @@ namespace ApotekaBackend.Controllers
 
 
         }
+
+
+        [HttpGet("klijent/{id}")]
+
+        public async Task<ActionResult<List<TransDto>>> GetTransByKlijent(int id, [FromQuery] int pageSize, [FromQuery] int pageNumber)
+        {
+            var transactionDtos = await _context.Transakcije
+    .Include(t => t.ProdajaDetalji)
+        .ThenInclude(d => d.Lek)
+    .Include(t => t.ProdajaDetalji)
+        .ThenInclude(d => d.Recept)
+    .Include(t => t.Klijent)
+    .Where(t => t.KlijentId == id)
+      .Skip((pageNumber - 1) * pageSize)  // Skip items for pagination
+     .Take(pageSize)                    // Take the pageSize items
+    .Select(transaction => new TransDto
+    {
+        Id = transaction.Id,
+        KlijentId = (int)transaction.KlijentId,
+        KlijentName = transaction.Klijent.Ime + ' ' + transaction.Klijent.Prezime,
+        Cena = transaction.Cena,
+        DatumTransakcije = transaction.DatumTransakcije.ToString(),
+        ProdajaDetalji = transaction.ProdajaDetalji.Select(d => new TransDetaljiDto
+        {
+            Id = d.Id,
+            IdLeka = d.IdLeka,
+            ImeLeka = d.Lek.Naziv,
+            KolicinaProizvoda = d.Kolicina,
+            IdRecepta = d.ReceptId,
+            LekPhotUrl=d.Lek.PhotoUrl,
+            ReceptUputstvo =d.Recept.Uputstvo
+        }).ToList()
+    })
+    .ToListAsync();
+
+       var totalRecords=_context.Transakcije.Where(t=>t.KlijentId==id).Count();  
+
+            return Ok(new { transakcije=transactionDtos,totalRecords=totalRecords });// Include associated Klijent
+
+
+
+
+
+
+        }
+
+
+
+        [HttpGet("klijent/{id}/cena")]
+
+        public async Task<ActionResult> GetTransByKlijentCena(int id)
+        {
+
+            var cena = _context.Transakcije.Where(t => t.KlijentId == id).Sum(t => t.Cena);
+
+
+
+            return Ok(cena);
+
+        }
+
+
+
         [HttpGet("{id}")]
 
         public async Task<ActionResult<TransDto>> GetTrans(int id)

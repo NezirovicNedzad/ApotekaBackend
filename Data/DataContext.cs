@@ -85,6 +85,7 @@ namespace ApotekaBackend.Data
                       .OnDelete(DeleteBehavior.Restrict);
 
             });
+       
 
             builder.Entity<Transkacija>().
                 HasOne(t => t.Klijent).

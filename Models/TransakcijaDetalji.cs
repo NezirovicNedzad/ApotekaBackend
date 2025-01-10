@@ -10,7 +10,7 @@
         public int? ReceptId { get; set; }
 
         public Lek Lek { get; set; } = null!;           // Navigacija prema Leku
-        public Recept? Recept { get; set; }    // Navigacija prema Receptu
+        public Recept Recept { get; set; }    // Navigacija prema Receptu
         
         public Transkacija? Transkacija { get; set; } // Navigacija prema ProdajaStandardni
              // Navigacija prema ProdajaRecept

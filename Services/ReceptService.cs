@@ -10,10 +10,10 @@ namespace ApotekaBackend.Services
 
         
 
-        public async Task AddRecept()
+        public async Task<int>AddRecept()
         {
             var randomlekId = await LekId();
-              var randomklijentId=await KlijentId();  
+              int randomklijentId=await KlijentId();  
 
 
 
@@ -21,6 +21,8 @@ namespace ApotekaBackend.Services
            await _unitOfWork.ReceptRepository.AddRandomRecept(randomklijentId, randomlekId);
 
             await _unitOfWork.Complete();
+
+            return randomklijentId;
         }
 
         private async Task<int> LekId()

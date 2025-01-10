@@ -330,7 +330,7 @@ namespace ApotekaBackend.Migrations
                     b.Property<DateTime>("DatumTransakcije")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("KlijentId")
+                    b.Property<int?>("KlijentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -526,9 +526,7 @@ namespace ApotekaBackend.Migrations
                 {
                     b.HasOne("ApotekaBackend.Models.Klijent", "Klijent")
                         .WithMany("Transakcije")
-                        .HasForeignKey("KlijentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("KlijentId");
 
                     b.Navigation("Klijent");
                 });

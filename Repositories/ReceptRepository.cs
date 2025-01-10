@@ -52,6 +52,8 @@ namespace ApotekaBackend.Repositories
         {
             var random = new Random();
 
+
+           
             var newRecept = new Recept
             {
                 Ordinatio = "Random Ordinatio",
@@ -61,7 +63,7 @@ namespace ApotekaBackend.Repositories
                 Zaglavlje = "Random Zaglavlje",
                 IdFarmaceuta =28, // Random pharmacist
                 IdLeka = idLeka, // Random medication
-                IdKlijenta =idKlijenta, // Random client
+                IdKlijenta =idKlijenta, // Random clienta
                 IsDoctorPresribed = true // Random boolean
             };
             await context.Recepti.AddAsync(newRecept);

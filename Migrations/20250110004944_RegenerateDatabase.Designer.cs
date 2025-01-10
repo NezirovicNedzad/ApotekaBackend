@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApotekaBackend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241206173510_IdentityAdded")]
-    partial class IdentityAdded
+    [Migration("20250110004944_RegenerateDatabase")]
+    partial class RegenerateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,6 +150,199 @@ namespace ApotekaBackend.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("ApotekaBackend.Models.Klijent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Adresa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DatumRodjenja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdApotekara")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prezime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdApotekara");
+
+                    b.ToTable("Klijenti");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Lek", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cena")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DatumIsteka")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdFarmaceuta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Kolicina")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("NaRecept")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Opis")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Proizvodjac")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFarmaceuta");
+
+                    b.ToTable("Lekovi");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Recept", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdFarmaceuta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdKlijenta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdLeka")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Invocatio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDoctorPresribed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ordinatio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subskricpija")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Uputstvo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zaglavlje")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFarmaceuta");
+
+                    b.HasIndex("IdKlijenta");
+
+                    b.HasIndex("IdLeka");
+
+                    b.ToTable("Recepti");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.TransakcijaDetalji", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdLeka")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTransakcije")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Kolicina")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReceptId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdLeka");
+
+                    b.HasIndex("IdTransakcije");
+
+                    b.HasIndex("ReceptId");
+
+                    b.ToTable("TransakcijaDetalji");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Transkacija", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cena")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DatumTransakcije")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("KlijentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KlijentId");
+
+                    b.ToTable("Transakcije");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -257,6 +450,90 @@ namespace ApotekaBackend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ApotekaBackend.Models.Klijent", b =>
+                {
+                    b.HasOne("ApotekaBackend.Models.AppUser", "Apotekar")
+                        .WithMany("Klijenti")
+                        .HasForeignKey("IdApotekara")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Apotekar");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Lek", b =>
+                {
+                    b.HasOne("ApotekaBackend.Models.AppUser", "Farmaceut")
+                        .WithMany("Lekovi")
+                        .HasForeignKey("IdFarmaceuta")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Farmaceut");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Recept", b =>
+                {
+                    b.HasOne("ApotekaBackend.Models.AppUser", "Farmaceut")
+                        .WithMany("Recepti")
+                        .HasForeignKey("IdFarmaceuta")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ApotekaBackend.Models.Klijent", "Klijent")
+                        .WithMany("Recepti")
+                        .HasForeignKey("IdKlijenta")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ApotekaBackend.Models.Lek", "Lek")
+                        .WithMany("Recepti")
+                        .HasForeignKey("IdLeka")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Farmaceut");
+
+                    b.Navigation("Klijent");
+
+                    b.Navigation("Lek");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.TransakcijaDetalji", b =>
+                {
+                    b.HasOne("ApotekaBackend.Models.Lek", "Lek")
+                        .WithMany("ProdajaDetalji")
+                        .HasForeignKey("IdLeka")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ApotekaBackend.Models.Transkacija", "Transkacija")
+                        .WithMany("ProdajaDetalji")
+                        .HasForeignKey("IdTransakcije")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApotekaBackend.Models.Recept", "Recept")
+                        .WithMany("ProdajaDetalji")
+                        .HasForeignKey("ReceptId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Lek");
+
+                    b.Navigation("Recept");
+
+                    b.Navigation("Transkacija");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Transkacija", b =>
+                {
+                    b.HasOne("ApotekaBackend.Models.Klijent", "Klijent")
+                        .WithMany("Transakcije")
+                        .HasForeignKey("KlijentId");
+
+                    b.Navigation("Klijent");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("ApotekaBackend.Models.AppRole", null)
@@ -300,7 +577,37 @@ namespace ApotekaBackend.Migrations
 
             modelBuilder.Entity("ApotekaBackend.Models.AppUser", b =>
                 {
+                    b.Navigation("Klijenti");
+
+                    b.Navigation("Lekovi");
+
+                    b.Navigation("Recepti");
+
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Klijent", b =>
+                {
+                    b.Navigation("Recepti");
+
+                    b.Navigation("Transakcije");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Lek", b =>
+                {
+                    b.Navigation("ProdajaDetalji");
+
+                    b.Navigation("Recepti");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Recept", b =>
+                {
+                    b.Navigation("ProdajaDetalji");
+                });
+
+            modelBuilder.Entity("ApotekaBackend.Models.Transkacija", b =>
+                {
+                    b.Navigation("ProdajaDetalji");
                 });
 #pragma warning restore 612, 618
         }
