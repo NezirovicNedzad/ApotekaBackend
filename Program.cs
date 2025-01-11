@@ -4,6 +4,7 @@ using ApotekaBackend.Interfaces;
 using ApotekaBackend.MIddleware;
 using ApotekaBackend.Models;
 using ApotekaBackend.Services;
+using ApotekaBackend.SignalR;
 using FitnessBackend;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -30,9 +31,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200","https://localhost:4200"));
+app.UseCors(x =>
+    x.AllowAnyHeader()
+     .AllowAnyMethod()
+     .WithOrigins("http://localhost:4200", "https://localhost:4200")  // Specify both HTTP and HTTPS explicitly
+     .AllowCredentials()  // Allow credentials like cookies or authentication tokens
+);
 app.UseAuthentication();
 
 app.UseAuthorization();
@@ -53,14 +58,20 @@ catch (Exception ex)
     logger.LogError(ex, "An error occured during migration");
 
 }
+app.MapHub<NotificationHub>("/notificationHub");  // Define your SignalR hub route here
+
+// Other routes (if you have any)
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseHangfireDashboard();
 
-//Schedule recurring job
-//RecurringJob.AddOrUpdate<IReceptDoctor>(
-//    "AddRandomReceptJob",
-//   service => service.AddRecept(),
-//     "*/2 * * * *" );
+
+RecurringJob.AddOrUpdate<IReceptDoctor>(
+    "AddRandomReceptJob",
+   service => service.AddRecept(),
+     "*/5 * * * *" );
 
 app.MapControllers();
 app.Run();

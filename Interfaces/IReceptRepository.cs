@@ -14,7 +14,7 @@ namespace ApotekaBackend.Interfaces
         Task<Recept>Add(Recept recept); 
 
         Task<List<ReceptForKlijentDto>>GetByKlijent(int klijentId);
-        Task <Recept> AddRandomRecept(int klijentId,int lekid);
+        Task <ReceptCheckDto> AddRandomRecept(int klijentId,int lekid);
         Task<ReceptBackgroundDto> GetNewReceipt();
     }
 }

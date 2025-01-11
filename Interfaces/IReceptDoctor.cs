@@ -3,6 +3,6 @@
     public interface IReceptDoctor
     {
 
-        public  Task<int> AddRecept();
+        public  Task AddRecept();
     }
 }

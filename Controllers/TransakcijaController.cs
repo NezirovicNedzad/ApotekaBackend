@@ -43,7 +43,7 @@ namespace ApotekaBackend.Controllers
                 }
                 lek.Kolicina = lek.Kolicina - 1;
                  _context.Lekovi.Update(lek);
-                cena += lek.Cena * detail.KolicinaProizvoda;
+              
                 // Check if Lek requires a prescription
                 if (lek.NaRecept)
                 {
@@ -63,7 +63,7 @@ namespace ApotekaBackend.Controllers
             var transaction = new Transkacija
             {
                 KlijentId = transkacijaDto.KlijentId,
-                Cena = cena,
+                Cena = transkacijaDto.CenaTotal,
                 DatumTransakcije = DateTime.UtcNow,
                 ProdajaDetalji = transkacijaDto.prodajaDetalji.Select(d => new TransakcijaDetalji
                 {
@@ -118,11 +118,15 @@ namespace ApotekaBackend.Controllers
                     ImeLeka = d.Lek.Naziv,
                     KolicinaProizvoda = d.Kolicina,
                     IdRecepta = d.ReceptId,
+                    LekPhotUrl=d.Lek.PhotoUrl,
                     ReceptUputstvo = d.Recept?.Uputstvo
                 }).ToList()
             }).ToList();
+            var totalRecords = _context.Transakcije.Count();
 
-            return Ok(transactionDtos);// Include associated Klijent
+            return Ok(new { transakcije = transactionDtos, totalRecords = totalRecords });
+
+         
 
 
 

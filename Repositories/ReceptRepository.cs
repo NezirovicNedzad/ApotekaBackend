@@ -48,7 +48,7 @@ namespace ApotekaBackend.Repositories
             return recepti;
         }
 
-        public async Task<Recept> AddRandomRecept(int idKlijenta,int idLeka)
+        public async Task<ReceptCheckDto> AddRandomRecept(int idKlijenta,int idLeka)
         {
             var random = new Random();
 
@@ -56,18 +56,27 @@ namespace ApotekaBackend.Repositories
            
             var newRecept = new Recept
             {
-                Ordinatio = "Random Ordinatio",
-                Subskricpija = "Random Subskricpija",
-                Uputstvo = "Random Uputstvo",
+                Ordinatio = "Ordinatio",
+                Subskricpija = "Subs",
+                Uputstvo = "Uput1",
                 Invocatio = "Random Invocatio",
                 Zaglavlje = "Random Zaglavlje",
-                IdFarmaceuta =28, // Random pharmacist
+                IdFarmaceuta =1, // Random pharmacist
                 IdLeka = idLeka, // Random medication
                 IdKlijenta =idKlijenta, // Random clienta
                 IsDoctorPresribed = true // Random boolean
             };
-            await context.Recepti.AddAsync(newRecept);
-            return newRecept;
+
+            var receptExist = await context.Recepti.Where(x => x.IdLeka == idLeka && x.IdKlijenta == idKlijenta).FirstOrDefaultAsync();
+
+            if (receptExist == null) {
+                await context.Recepti.AddAsync(newRecept);
+               return new ReceptCheckDto { dodat = true ,recept=newRecept};
+            }
+            else {
+                return new ReceptCheckDto { dodat = false, recept = newRecept };
+            }
+           
 
         }
 

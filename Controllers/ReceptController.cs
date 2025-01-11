@@ -3,6 +3,7 @@ using ApotekaBackend.Interfaces;
 using ApotekaBackend.Models;
 using ApotekaBackend.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApotekaBackend.Controllers
@@ -112,11 +113,13 @@ namespace ApotekaBackend.Controllers
         }
 
         [HttpPost("random-add")]
-        public async Task<IActionResult>RandomAdd(int idKlijenta,int idLeka)
+        public async Task<IActionResult>RandomAdd()
         {
-            var klijentId = await receptService.AddRecept();
+             await receptService.AddRecept();
 
-            return Ok(klijentId);   
+            await unitOfWork.Complete();
+
+            return Ok(new { message = "Uspesno dodan!" });
 
         }
     }

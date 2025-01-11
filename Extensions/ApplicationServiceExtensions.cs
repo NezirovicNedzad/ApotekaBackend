@@ -28,7 +28,8 @@ namespace ApotekaBackend.Extensions
 
             services.AddSwaggerGen();
             services.AddCors();
-           services.AddScoped<ITokenService, TokenService>();
+            services.AddSignalR();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILekRepository, LekRepository>();    
             services.AddScoped<IKlijentRepository, KlijentRepository>();

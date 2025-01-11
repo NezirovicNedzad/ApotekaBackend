@@ -1,28 +1,36 @@
 ﻿using ApotekaBackend.Data;
+using ApotekaBackend.Dto_s;
 using ApotekaBackend.Interfaces;
+using ApotekaBackend.SignalR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ApotekaBackend.Services
 {
-    public class ReceptService(IUnitOfWork _unitOfWork) : IReceptDoctor
+    public class ReceptService(IUnitOfWork _unitOfWork, IHubContext<NotificationHub> _hubContext) : IReceptDoctor
     {
 
         
 
-        public async Task<int>AddRecept()
+        public async Task AddRecept()
         {
             var randomlekId = await LekId();
-              int randomklijentId=await KlijentId();  
+            int randomklijentId = await KlijentId();
 
 
 
+            
+          ReceptCheckDto receptCheckDto=await _unitOfWork.ReceptRepository.AddRandomRecept(randomklijentId, randomlekId);
 
-           await _unitOfWork.ReceptRepository.AddRandomRecept(randomklijentId, randomlekId);
+            if(receptCheckDto.dodat)
+            {
+                await _unitOfWork.Complete();
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", "A new recept has been added!");
+            }
 
-            await _unitOfWork.Complete();
-
-            return randomklijentId;
+       
+            
         }
 
         private async Task<int> LekId()
@@ -41,7 +49,7 @@ namespace ApotekaBackend.Services
                 else
                 {
                     // Handle the case where there are no valid items
-                    randomBr = 18;
+                    randomBr = 15;
                 }
             }
             else
@@ -71,7 +79,7 @@ namespace ApotekaBackend.Services
                 else
                 {
                     // Handle the case where there are no valid items
-                    randomBr = 18;
+                    randomBr = 2;
                 }
             }
             else
